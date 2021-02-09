@@ -1,13 +1,11 @@
 import { Request, Response, NextFunction, Application } from 'express';
 import Route from "./route";
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { v4 as uuid } from 'uuid';
 import config from '../../config/server.json';
 
-// Temp DataBase
-const username_password: any = {
-
-}
-// end of Temp DataBase
+import UserModel, { IUser } from '../models/user.model';
 
 class AuthRoute extends Route {
 
@@ -17,32 +15,60 @@ class AuthRoute extends Route {
         app.get("/getPrivateData", this.authenticateToken, this.getPrivateData)
     }
 
-    private register(req: Request, res: Response) {
+    private async register(req: Request, res: Response) {
         const { username, password } = req.body
-
-        // create a user if not exist
-        if (username_password[username]) {
-            res.status(400).json({ msg: "already has this user!" })
+        if (!username || !password) {
+            res.status(400).json({ err: "username or password is empty!" });
             return;
         }
-        username_password[username] = password
-        res.status(200).json({ msg: "success" })
+        try {
+            // check if user exist
+            const oldUser = await UserModel.findOne(({ username }));
+            if (oldUser) {
+                res.status(400).json({ msg: "already has this user!" })
+                return;
+            }
+            // if not exist, create user
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(password, salt);
+
+            const newUser = await UserModel.create({
+                username,
+                password: hash,
+                id: uuid()
+            })
+            newUser.save();
+            res.status(200).json({ msg: "success" });
+        } catch (err) {
+            res.status(500).json({ err });
+        }
     }
 
-    private login(req: Request, res: Response) {
+    private async login(req: Request, res: Response) {
         const { username, password } = req.body
+        try {
+            // if has this user
+            const user = await UserModel.findOne(({ username }));
 
-        // if has this user
-        if (!username_password[username]) {
-            res.status(400).json({ msg: "this username is not fund yet,please register first!" })
-            return;
-        }
+            if (!user) {
+                res.status(400).json({ msg: "this username is not fund yet,please register first!" })
+                return;
+            }
 
-        const user = {
-            name: username
+            const isMatch = bcrypt.compareSync(password, user.password);
+            if (isMatch) {
+                const userData = {
+                    id: user.id,
+                    name: user.username
+                }
+                const accessToken = jwt.sign(userData, config.jwt_key)
+                res.json({ accessToken: accessToken });
+            } else {
+                res.sendStatus(401)
+            }
+        } catch (err) {
+            res.status(500).json(err)
         }
-        const accessToken = jwt.sign(user, config.jwt_key)
-        res.json({ accessToken: accessToken });
     }
 
     private getPrivateData(req: Request, res: Response) {
