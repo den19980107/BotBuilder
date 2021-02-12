@@ -1,10 +1,13 @@
 import express from 'express';
-import AuthRoute from './routes/auth';
 import DBConfig from '../config/db.json';
 import connectToDB from './connectToDB';
+import cors from 'cors';
+// Routes
+import AuthRoute from './routes/auth';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const dbConnectionString = `mongodb://${DBConfig.HOST}:${DBConfig.PORT}/${DBConfig.DBNAME}`
 connectToDB(dbConnectionString)

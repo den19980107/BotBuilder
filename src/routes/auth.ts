@@ -10,9 +10,8 @@ import UserModel, { IUser } from '../models/user.model';
 class AuthRoute extends Route {
 
     protected registerRoutes(app: Application) {
-        app.post('/register', this.register)
-        app.post("/login", this.login)
-        app.get("/getPrivateData", this.authenticateToken, this.getPrivateData)
+        app.post(`${config.API_PREFIX_URL}/auth/register`, this.register)
+        app.post(`${config.API_PREFIX_URL}/auth/login`, this.login)
     }
 
     private async register(req: Request, res: Response) {
@@ -37,7 +36,7 @@ class AuthRoute extends Route {
                 password: hash,
                 id: uuid()
             })
-            newUser.save();
+            await newUser.save();
             res.status(200).json({ msg: "success" });
         } catch (err) {
             res.status(500).json({ err });
@@ -62,19 +61,14 @@ class AuthRoute extends Route {
                     name: user.username
                 }
                 const accessToken = jwt.sign(userData, config.jwt_key)
-                res.json({ accessToken: accessToken });
+                res.json({ ...userData, accessToken: accessToken });
             } else {
-                res.sendStatus(401)
+                res.status(401).json({ msg: "user or password was wrong!" })
             }
         } catch (err) {
             res.status(500).json(err)
         }
     }
-
-    private getPrivateData(req: Request, res: Response) {
-        res.send("this is private data")
-    }
-
 }
 
 export default AuthRoute;

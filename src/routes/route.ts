@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction, Application } from "express";
 import config from '../../config/server.json';
 import jwt from 'jsonwebtoken';
+import { IUser } from "../models/user.model";
 
 abstract class Route {
 
@@ -18,7 +19,7 @@ abstract class Route {
 
         jwt.verify(token, config.jwt_key, (err, user) => {
             if (err) return res.sendStatus(403);
-            req.user = user;
+            req.user = user as IUser;
             next();
         });
     }

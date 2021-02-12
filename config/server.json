@@ -1,3 +1,4 @@
 {
-    "jwt_key":"botbuilder"
+    "jwt_key":"botbuilder",
+    "API_PREFIX_URL":"/api"
 }

@@ -19,5 +19,8 @@ export default (DBConnectionString: string) => {
     };
     connect();
 
+    // https://mongoosejs.com/docs/deprecations.html#findandmodify
+    mongoose.set('useFindAndModify', false);
+
     mongoose.connection.on('disconnected', connect);
 };
