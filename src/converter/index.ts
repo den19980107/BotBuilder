@@ -66,6 +66,9 @@ export default class NodeConverter {
                     const flowShareVariable = new FlowShareVariable()
                     nodePool.run(id, flowShareVariable, null);
                     break;
+                case NodeType.TIMER:
+                    // TODO
+                    break;
                 case NodeType.CONDITION:
                     const condition_node = new ConditionNode(id, name, payload, type, next_node_id)
                     nodePool.set(condition_node.id, condition_node);
@@ -86,6 +89,15 @@ export default class NodeConverter {
                     // TODO
                     break;
                 case NodeType.BASIC_CACULATION:
+                    // TODO
+                    break;
+                case NodeType.DELAY:
+                    // TODO
+                    break;
+                case NodeType.HTML_RESPONSE:
+                    // TODO
+                    break;
+                case NodeType.SEND_EMAIL:
                     // TODO
                     break;
             }

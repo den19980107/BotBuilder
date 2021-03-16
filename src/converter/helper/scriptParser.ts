@@ -1,6 +1,8 @@
 import FlowShareVariable from "./flowShareVariable";
 
 export default class ScriptParser {
+
+    // TODO 將 #DATA.some.thing.blabla 改為 ${DATA.some.thing.blabla}
     /**
     * 檢查使用者的字串中是否包含 "#DATA" 
     * 如果有的話需要將該字串替換成目前變數中的值
