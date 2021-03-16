@@ -1,4 +1,4 @@
-import node from "../nodes/node";
+import node from "../nodes/INode";
 
 export default class nodePool {
     static pool: { [key: string]: node } = {}
@@ -11,8 +11,8 @@ export default class nodePool {
         return nodePool.pool[key]
     }
 
-    static run = (key: string, param: any) => {
+    static run = async (key: string, param: any) => {
         const node = nodePool.get(key);
-        node.run(param);
+        await node.run(param);
     }
 }
