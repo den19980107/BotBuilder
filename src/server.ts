@@ -14,15 +14,18 @@ app.use(express.json());
 app.use(cors());
 
 const dbConnectionString = `mongodb://${DBConfig.HOST}:${DBConfig.PORT}/${DBConfig.DBNAME}`
-connectToDB(dbConnectionString)
-
+try {
+    // connectToDB(dbConnectionString)
+} catch (e) {
+    console.error("connecting to database have some error", e)
+}
 // register routes
 new AuthRoute(app);
 new BotRoute(app)
 
 
-// node initail
-NodeConverter();
+// NodeConverter start
+NodeConverter.start();
 
 app.listen(5000, () => {
     console.log(`app listening at http://localhost:5000`)
