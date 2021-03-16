@@ -22,8 +22,11 @@ new BotRoute(app)
 
 
 // node initail
-NodeConverter(app);
+NodeConverter();
 
 app.listen(5000, () => {
     console.log(`app listening at http://localhost:5000`)
 })
+
+
+export { app }
