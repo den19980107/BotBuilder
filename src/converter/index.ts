@@ -3,7 +3,7 @@ import ConditionNode from './nodes/condition.node'
 import HttpResponseNode from './nodes/httpResponse.node'
 import WebHookNode from './nodes/webhook.node'
 import FetchDataNode from './nodes/fetchData.node'
-
+import DeclarVariableNode from './nodes/declarVariable.node'
 // models
 import BotModel from '../models/bot.model';
 
@@ -76,7 +76,8 @@ export default class NodeConverter {
                     nodePool.set(fecthData_node.id, fecthData_node);
                     break;
                 case NodeType.DECLAR_VARIABLE:
-                    // TODO
+                    const declarVariable_node = new DeclarVariableNode(id, name, payload, type, next_node_id)
+                    nodePool.set(declarVariable_node.id, declarVariable_node);
                     break;
                 case NodeType.LOOP:
                     // TODO
