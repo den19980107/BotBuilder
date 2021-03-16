@@ -1,7 +1,7 @@
-import globalVariabal from "../helper/globalVariable";
 import nodePool from "../helper/nodePool";
-import node from "./node";
+import node from "./INode";
 import { Response } from 'express'
+import ScriptParser from "../helper/scriptParser";
 export default class HttpResponseNode extends node {
     // statusCode: 200,
     // responseData: null
@@ -12,7 +12,17 @@ export default class HttpResponseNode extends node {
         this.payload = payload
     }
 
-    run(param: any): void {
+    protected checkIfNeedParsing(): void {
+        // 檢查是否含有 "#DATA" 需要從全域變數中讀取
+        this.payload.statusCode = ScriptParser.scriptParserMiddleware(this.payload.statusCode)
+        this.payload.responseData = ScriptParser.scriptParserMiddleware(this.payload.responseData)
+    }
+
+    async run(param: any): Promise<void> {
+        console.log("http response node is check if need parseing")
+        this.checkIfNeedParsing();
+        console.log("http response node is running...")
+
         const res: Response = param.res;
         res.status(this.payload.statusCode).json(this.payload.responseData);
         if (this.next_node_id) {
