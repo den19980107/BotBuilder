@@ -23,40 +23,6 @@ interface FLOW {
     }
 }
 
-const flow1: FLOW = {
-    '1': {
-        name: "get some random user from api",
-        type: "WEB_HOOK",
-        payload: {
-            route: "/getrandomuser",
-            method: "GET",
-            storeBodyAt: "Data"
-        },
-        next_node_id: "2"
-    },
-    '2': {
-        name: "fetch user from api",
-        type: "FETCH_DATA",
-        payload: {
-            url: "https://jsonplaceholder.typicode.com/comments",
-            method: "GET",
-            body: null,
-            headers: null,
-            storeDataAt: "fetchResult"
-        },
-        next_node_id: "3"
-    },
-    '3': {
-        name: "response api data",
-        type: "HTTP_RESPONSE",
-        payload: {
-            statusCode: 200,
-            responseData: "#DATA.fetchResult[1]"
-        },
-        next_node_id: null
-    }
-}
-
 export default class NodeConverter {
     static async start() {
         // get all bots scripts
@@ -75,7 +41,7 @@ export default class NodeConverter {
     }
 
     static async getAllScript(): Promise<SCRIPT[]> {
-        const bots = await BotModel.find()
+        const bots = await BotModel.find({})
         const scripts: Array<SCRIPT> = [];
         await bots.forEach(bot => {
             scripts.push(JSON.parse(bot.script))
@@ -88,7 +54,7 @@ export default class NodeConverter {
 
         // 把所有 node 建立起來存放在 global node 中
         nodes_id.forEach(id => {
-            const nodeData = flow1[id];
+            const nodeData = flow[id];
             const { name, payload, type, next_node_id } = nodeData
             switch (nodeData.type) {
                 case NodeType.WEB_HOOK:
