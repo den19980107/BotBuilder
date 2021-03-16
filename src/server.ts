@@ -6,6 +6,9 @@ import cors from 'cors';
 import BotRoute from './routes/bot';
 import AuthRoute from './routes/auth';
 
+// Node Converter
+import NodeConverter from './converter';
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -16,6 +19,10 @@ connectToDB(dbConnectionString)
 // register routes
 new AuthRoute(app);
 new BotRoute(app)
+
+
+// node initail
+NodeConverter(app);
 
 app.listen(5000, () => {
     console.log(`app listening at http://localhost:5000`)
