@@ -17,12 +17,12 @@ abstract class node {
 
     abstract run(param: any): Promise<any>
 
-    // protected checkIfNeedParsing(payload: any): void {
-    //     const payloadKeys = Object.keys(payload)
-    //     payloadKeys.forEach(key => {
-    //         this.payload[key] = ScriptParser.scriptParserMiddleware(this.payload[key])
-    //     })
-    // }
+    protected checkIfNeedParsing(payload: any): void {
+        const payloadKeys = Object.keys(payload)
+        payloadKeys.forEach(key => {
+            this.payload[key] = ScriptParser.scriptParserMiddleware(this.payload[key])
+        })
+    }
 }
 
 export default node;
