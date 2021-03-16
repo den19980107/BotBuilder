@@ -15,7 +15,7 @@ app.use(cors());
 
 const dbConnectionString = `mongodb://${DBConfig.HOST}:${DBConfig.PORT}/${DBConfig.DBNAME}`
 try {
-    // connectToDB(dbConnectionString)
+    connectToDB(dbConnectionString)
 } catch (e) {
     console.error("connecting to database have some error", e)
 }
