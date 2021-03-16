@@ -1,11 +1,11 @@
-export default class globalVariabal {
+export default class globalVariable {
     static store: { [key: string]: any } = {}
 
     static set = (key: string, value: any) => {
-        globalVariabal.store[key] = value;
+        globalVariable.store[key] = value;
     }
 
     static get = (key: string) => {
-        return globalVariabal.store[key]
+        return globalVariable.store[key]
     }
 }
