@@ -1,4 +1,6 @@
 import node from "../nodes/INode";
+import FlowShareVariable from "./flowShareVariable";
+import { HTTP_Data } from '../nodes/INode'
 
 export default class nodePool {
     static pool: { [key: string]: node } = {}
@@ -11,8 +13,8 @@ export default class nodePool {
         return nodePool.pool[key]
     }
 
-    static run = async (key: string, param: any) => {
+    static run = async (key: string, flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null) => {
         const node = nodePool.get(key);
-        await node.run(param);
+        await node.run(flowShareVariable, HTTP_Data);
     }
 }

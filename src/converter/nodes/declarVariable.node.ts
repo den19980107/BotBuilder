@@ -1,6 +1,6 @@
-import globalVariable from "../helper/globalVariable";
-import ScriptParser from "../helper/scriptParser";
-import node from "./INode";
+import FlowShareVariable from "../helper/flowShareVariable";
+import nodePool from "../helper/nodePool";
+import node, { HTTP_Data } from "./INode";
 
 export default class DeclarVariable extends node {
     payload: { key: string, value: any }
@@ -10,11 +10,15 @@ export default class DeclarVariable extends node {
         this.payload = payload
     }
 
-    async run(param: any): Promise<void> {
+    async run(flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null): Promise<void> {
         console.log("declar variable node is check if need parseing")
-        this.checkIfNeedParsing(this.payload);
+        this.checkIfNeedParsing(this.payload, flowShareVariable);
         console.log("declar variable node is running...")
-        globalVariable.set(this.payload.key, this.payload.value);
+        flowShareVariable.set(this.payload.key, this.payload.value);
+
+        if (this.next_node_id) {
+            nodePool.run(this.next_node_id, flowShareVariable, HTTP_Data);
+        }
     }
 
 }

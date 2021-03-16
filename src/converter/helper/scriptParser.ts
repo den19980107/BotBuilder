@@ -1,4 +1,4 @@
-import globalVariable from "./globalVariable";
+import FlowShareVariable from "./flowShareVariable";
 
 export default class ScriptParser {
     /**
@@ -7,11 +7,11 @@ export default class ScriptParser {
     * EX:
     * payload: {
     *       statusCode: 200,
-    *       responseData: "#DATA.fetchResult" => 要替換成 global variable 中的 "fetchResult" = globalVariable.get("fetchResult") 
+    *       responseData: "#DATA.fetchResult" => 要替換成 flowShareVariable 中的 "fetchResult" = flowShareVariable.get("fetchResult") 
     * }
     */
 
-    static scriptParserMiddleware<T>(input: unknown): T {
+    static scriptParserMiddleware<T>(input: unknown, flowShareVariable: FlowShareVariable): T {
         if (!input) return <T><any>null
 
         let string = String(input)
@@ -37,10 +37,10 @@ export default class ScriptParser {
                     // 先忽視後面的 [1] 因為這一步是要將資料從 global variable 中取出,最後會對陣列進行處理
                     const currentStackWithoutArraySymbol = currentStack.substring(0, currentStack.lastIndexOf("["))
 
-                    returnValue = globalVariable.get(currentStackWithoutArraySymbol)
+                    returnValue = flowShareVariable.get(currentStackWithoutArraySymbol)
 
                 } else {
-                    returnValue = globalVariable.get(currentStack)
+                    returnValue = flowShareVariable.get(currentStack)
                 }
             } else {
                 try {

@@ -1,11 +1,10 @@
-import node from './INode';
+import node, { HTTP_Data } from './INode';
 import { app } from '../../server';
-import globalVariable from '../helper/globalVariable';
 import nodePool from '../helper/nodePool';
-import ScriptParser from '../helper/scriptParser';
 
 // constants
 import * as httpMethods from '../constant/httpMethod.constants'
+import FlowShareVariable from '../helper/flowShareVariable';
 
 export default class WebHookNode extends node {
     payload: { route: string; method: string; storeBodyAt: string }
@@ -15,9 +14,9 @@ export default class WebHookNode extends node {
         this.payload = payload
     }
 
-    async run(param: any): Promise<void> {
+    async run(flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null): Promise<void> {
         console.log("webhook node is check if need parseing")
-        this.checkIfNeedParsing(this.payload);
+        this.checkIfNeedParsing(this.payload, flowShareVariable);
         console.log("webhook node is running...")
 
         switch (this.payload.method) {
@@ -26,14 +25,16 @@ export default class WebHookNode extends node {
                     if (this.payload.storeBodyAt) {
                         // save to global variable
                         console.log("req.body", req.body)
-                        globalVariable.set(this.payload.storeBodyAt, req.body);
+                        flowShareVariable.set(this.payload.storeBodyAt, req.body);
                     }
                     if (this.next_node_id) {
-                        // run node by id
-                        const param = {
-                            req, res
+                        // set http data
+                        HTTP_Data = {
+                            req,
+                            res
                         }
-                        nodePool.run(this.next_node_id, param);
+                        // run node by id
+                        nodePool.run(this.next_node_id, flowShareVariable, HTTP_Data);
                     }
                 })
                 break;

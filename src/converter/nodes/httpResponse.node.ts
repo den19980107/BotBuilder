@@ -1,7 +1,6 @@
 import nodePool from "../helper/nodePool";
-import node from "./INode";
-import { Response } from 'express'
-import ScriptParser from "../helper/scriptParser";
+import node, { HTTP_Data } from "./INode";
+import FlowShareVariable from "../helper/flowShareVariable";
 export default class HttpResponseNode extends node {
     // statusCode: 200,
     // responseData: null
@@ -12,15 +11,19 @@ export default class HttpResponseNode extends node {
         this.payload = payload
     }
 
-    async run(param: any): Promise<void> {
+    async run(flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null): Promise<void> {
         console.log("http response node is check if need parseing")
-        this.checkIfNeedParsing(this.payload);
+        this.checkIfNeedParsing(this.payload, flowShareVariable);
         console.log("http response node is running...")
 
-        const res: Response = param.res;
-        res.status(this.payload.statusCode).json(this.payload.responseData);
-        if (this.next_node_id) {
-            nodePool.run(this.next_node_id, param);
+        if (HTTP_Data) {
+            const { res } = HTTP_Data
+            res.status(this.payload.statusCode).json(this.payload.responseData);
+            if (this.next_node_id) {
+                nodePool.run(this.next_node_id, flowShareVariable, HTTP_Data);
+            }
+        } else {
+            console.error("http response node dosent have 'res' to response data")
         }
     }
 }
