@@ -12,15 +12,9 @@ export default class HttpResponseNode extends node {
         this.payload = payload
     }
 
-    protected checkIfNeedParsing(): void {
-        // 檢查是否含有 "#DATA" 需要從全域變數中讀取
-        this.payload.statusCode = ScriptParser.scriptParserMiddleware(this.payload.statusCode)
-        this.payload.responseData = ScriptParser.scriptParserMiddleware(this.payload.responseData)
-    }
-
     async run(param: any): Promise<void> {
         console.log("http response node is check if need parseing")
-        this.checkIfNeedParsing();
+        this.checkIfNeedParsing(this.payload);
         console.log("http response node is running...")
 
         const res: Response = param.res;

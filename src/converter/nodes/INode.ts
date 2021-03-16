@@ -1,3 +1,5 @@
+import ScriptParser from "../helper/scriptParser";
+
 abstract class node {
     id: string;
     name: string;
@@ -15,7 +17,12 @@ abstract class node {
 
     abstract run(param: any): Promise<any>
 
-    protected abstract checkIfNeedParsing(): void
+    // protected checkIfNeedParsing(payload: any): void {
+    //     const payloadKeys = Object.keys(payload)
+    //     payloadKeys.forEach(key => {
+    //         this.payload[key] = ScriptParser.scriptParserMiddleware(this.payload[key])
+    //     })
+    // }
 }
 
 export default node;

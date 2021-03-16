@@ -19,18 +19,9 @@ export default class ConditionNode extends node {
         this.payload = payload
     }
 
-    protected checkIfNeedParsing(): void {
-        // 檢查是否含有 "#DATA" 需要從全域變數中讀取
-        this.payload.condition = ScriptParser.scriptParserMiddleware(this.payload.condition)
-        this.payload.operator = ScriptParser.scriptParserMiddleware(this.payload.operator)
-        this.payload.operant = ScriptParser.scriptParserMiddleware(this.payload.operant)
-        this.payload.true_run_node_id = ScriptParser.scriptParserMiddleware(this.payload.true_run_node_id)
-        this.payload.false_run_node_id = ScriptParser.scriptParserMiddleware(this.payload.false_run_node_id)
-    }
-
     async run(param: any): Promise<void> {
         console.log("condition node is check if need parseing")
-        this.checkIfNeedParsing();
+        this.checkIfNeedParsing(this.payload);
         console.log("condition node is running...")
         // store     key       
         // Data = { value : 1}
