@@ -31,7 +31,7 @@ class BotRoute extends Route {
             res.status(500).json({ err })
         }
     }
-    //test
+
     private async delete(req: Request, res: Response) {
         const botId = req.params.id;
         if (!botId) {
