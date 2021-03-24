@@ -33,8 +33,7 @@ class AuthRoute extends Route {
 
             const newUser = await UserModel.create({
                 username,
-                password: hash,
-                id: uuid()
+                password: hash
             })
             await newUser.save();
             res.status(200).json({ msg: "success" });

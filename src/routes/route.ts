@@ -17,6 +17,7 @@ abstract class Route {
 
         if (!token) return res.sendStatus(401);
 
+        // 將 user 資料序列化出來後存在 express req.user 中
         jwt.verify(token, config.jwt_key, (err, user) => {
             if (err) return res.sendStatus(403);
             req.user = user as IUser;

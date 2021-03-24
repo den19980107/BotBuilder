@@ -11,7 +11,6 @@ class BotRoute extends Route {
         app.post(`${config.API_PREFIX_URL}/bot/delete/:id`, this.authenticateToken, this.checkIfBotExistAndBotBelongToCurrentUser, this.delete)
         app.post(`${config.API_PREFIX_URL}/bot/update/:id`, this.authenticateToken, this.checkIfBotExistAndBotBelongToCurrentUser, this.update)
         app.get(`${config.API_PREFIX_URL}/bot/:id`, this.authenticateToken, this.checkIfBotExistAndBotBelongToCurrentUser, this.getBotData)
-
     }
 
     private async create(req: Request, res: Response) {
@@ -24,7 +23,6 @@ class BotRoute extends Route {
             const newBot = await BotModel.create({
                 name,
                 script,
-                id: uuid(),
                 belongUserId: req.user.id
             });
             await newBot.save();
@@ -83,19 +81,23 @@ class BotRoute extends Route {
     private async checkIfBotExistAndBotBelongToCurrentUser(req: Request, res: Response, next: NextFunction) {
         const userId = req.user.id;
         const botId = req.params.id;
-        const bot = await BotModel.findById(botId)
-        if (!bot) {
-            // dosent have this bot
-            res.status(400).json({ err: "this bot is not exist!" });
-            return;
-        }
-        if (bot.belongUserId !== userId) {
-            // not your bot
-            res.status(403).json({ err: "this bot is not your's" });
-            return;
-        }
+        try {
+            const bot = await BotModel.findById(botId)
+            if (!bot) {
+                // dosent have this bot
+                res.status(400).json({ err: "this bot is not exist!" });
+                return;
+            }
+            if (bot.belongUserId !== userId) {
+                // not your bot
+                res.status(403).json({ err: "this bot is not your's" });
+                return;
+            }
 
-        next();
+            next();
+        } catch (e) {
+            console.error(e)
+        }
     }
 }
 
