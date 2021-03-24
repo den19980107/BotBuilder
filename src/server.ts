@@ -6,17 +6,30 @@ import cors from 'cors';
 import BotRoute from './routes/bot';
 import AuthRoute from './routes/auth';
 
+// Node Converter
+import NodeConverter from './converter';
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 const dbConnectionString = `mongodb://${DBConfig.HOST}:${DBConfig.PORT}/${DBConfig.DBNAME}`
-connectToDB(dbConnectionString)
-
+try {
+    connectToDB(dbConnectionString)
+} catch (e) {
+    console.error("connecting to database have some error", e)
+}
 // register routes
 new AuthRoute(app);
 new BotRoute(app)
 
+
+// NodeConverter start
+NodeConverter.start();
+
 app.listen(5000, () => {
     console.log(`app listening at http://localhost:5000`)
 })
+
+
+export { app }
