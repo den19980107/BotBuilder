@@ -16,7 +16,10 @@ export default class nodePool {
     }
 
     static run = async (key: string, flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null) => {
+        console.log("run key = ", key)
         const node = nodePool.get(key);
-        await node.run(flowShareVariable, HTTP_Data);
+        if (node) {
+            await node.run(flowShareVariable, HTTP_Data);
+        }
     }
 }
