@@ -15,13 +15,15 @@ interface SCRIPT {
     [key: string]: FLOW
 }
 
+interface NODE {
+    name: string,
+    type: string,
+    payload: any,
+    next_node_id: string | null
+}
+
 interface FLOW {
-    [key: string]: {
-        name: string,
-        type: string,
-        payload: any,
-        next_node_id: string | null
-    }
+    [key: string]: NODE
 }
 
 export default class NodeConverter {
