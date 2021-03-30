@@ -2,7 +2,7 @@ import nodePool from "../helper/nodePool";
 import node, { HTTP_Data } from "./INode";
 
 // constants
-import * as conditionOperator from '../constant/conditionOperator.constants'
+import ConditionOperator from '../constant/conditionOperator.constants'
 import FlowShareVariable from "../helper/flowShareVariable";
 
 export default class ConditionNode extends node {
@@ -35,23 +35,23 @@ export default class ConditionNode extends node {
         })
         const operantValue = this.payload.operant;
         switch (this.payload.operator) {
-            case conditionOperator.GREATER:
+            case ConditionOperator.GREATER:
                 const isGreater = conditionValue > operantValue
                 isGreater ?
                     nodePool.run(this.payload.true_run_node_id, flowShareVariable, HTTP_Data)
                     :
                     nodePool.run(this.payload.false_run_node_id, flowShareVariable, HTTP_Data)
                 break;
-            case conditionOperator.GREATER_EQUAL:
+            case ConditionOperator.GREATER_EQUAL:
                 // TODO
                 break;
-            case conditionOperator.LESSER:
+            case ConditionOperator.LESSER:
                 // TODO
                 break;
-            case conditionOperator.LESSER_EQUAL:
+            case ConditionOperator.LESSER_EQUAL:
                 // TODO    
                 break;
-            case conditionOperator.EQUAL:
+            case ConditionOperator.EQUAL:
                 // TODO    
                 break;
         }

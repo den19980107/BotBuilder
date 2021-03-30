@@ -1,13 +1,15 @@
-export const WEB_HOOK = "WEB_HOOK";
-export const FETCH_DATA = "FETCH_DATA";
-export const DECLAR_VARIABLE = "DECLAR_VARIABLE";
-export const CONDITION = "CONDITION";
-export const LOOP = "LOOP";
-export const BASIC_CACULATION = "BASIC_CACULATION";
-export const HTTP_RESPONSE = "HTTP_RESPONSE";
-export const TIMER = "TIMER";
-export const DELAY = "DELAY";
-export const SEND_EMAIL = "SEND_EMAIL";
-export const HTML_RESPONSE = "HTML_RESPONSE";
+enum NodeType {
+    WEB_HOOK = "WEB_HOOK",
+    FETCH_DATA = "FETCH_DATA",
+    DECLAR_VARIABLE = "DECLAR_VARIABLE",
+    CONDITION = "CONDITION",
+    LOOP = "LOOP",
+    BASIC_CACULATION = "BASIC_CACULATION",
+    HTTP_RESPONSE = "HTTP_RESPONSE",
+    TIMER = "TIMER",
+    DELAY = "DELAY",
+    SEND_EMAIL = "SEND_EMAIL",
+    HTML_RESPONSE = "HTML_RESPONSE"
+}
 
-
+export default NodeType

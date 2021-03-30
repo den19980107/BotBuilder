@@ -3,7 +3,7 @@ import { app } from '../../server';
 import nodePool from '../helper/nodePool';
 
 // constants
-import * as httpMethods from '../constant/httpMethod.constants'
+import HttpMethods from '../constant/httpMethod.constants'
 import FlowShareVariable from '../helper/flowShareVariable';
 
 export default class WebHookNode extends node {
@@ -20,7 +20,7 @@ export default class WebHookNode extends node {
         console.log("webhook node is running...")
 
         switch (this.payload.method) {
-            case httpMethods.GET:
+            case HttpMethods.GET:
                 app.get(this.payload.route, (req, res) => {
                     if (this.payload.storeBodyAt) {
                         // save to global variable
@@ -38,13 +38,13 @@ export default class WebHookNode extends node {
                     }
                 })
                 break;
-            case httpMethods.POST:
+            case HttpMethods.POST:
                 // TODO
                 break;
-            case httpMethods.PUT:
+            case HttpMethods.PUT:
                 // TODO
                 break;
-            case httpMethods.DELETE:
+            case HttpMethods.DELETE:
                 // TODO
                 break;
         }

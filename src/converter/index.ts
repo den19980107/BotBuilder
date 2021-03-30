@@ -8,7 +8,7 @@ import DeclarVariableNode from './nodes/declarVariable.node'
 import BotModel from '../models/bot.model';
 
 // constants
-import * as NodeType from './constant/nodeType.constants'
+import NodeType from './constant/nodeType.constants'
 import FlowShareVariable from './helper/flowShareVariable'
 
 interface SCRIPT {
