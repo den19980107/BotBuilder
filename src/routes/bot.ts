@@ -3,6 +3,7 @@ import Route from "./route";
 import config from '../../config/server.json'
 import BotModel from '../models/bot.model';
 import { v4 as uuid } from 'uuid';
+import NodeConverter, { SCRIPT } from '../converter';
 
 class BotRoute extends Route {
 
@@ -26,6 +27,10 @@ class BotRoute extends Route {
                 belongUserId: req.user.id
             });
             await newBot.save();
+
+            const newBotScript: SCRIPT = JSON.parse(newBot.script);
+            NodeConverter.convertScript(newBotScript)
+
             res.sendStatus(200);
         } catch (err) {
             res.status(500).json({ err })
