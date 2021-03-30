@@ -7,6 +7,8 @@ export default class nodePool {
 
     static set = (key: string, node: node) => {
         nodePool.pool[key] = node;
+        console.log("set node ", node)
+        console.log("current nodes count = ", Object.keys(nodePool.pool))
     }
 
     static get = (key: string) => {
