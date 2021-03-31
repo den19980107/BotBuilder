@@ -67,6 +67,24 @@ export default class NodeConverter {
         })
     }
 
+    static scriptToFlows(script: SCRIPT): Array<FLOW> {
+        const flows_id = Object.keys(script);
+        let flows: Array<FLOW> = [];
+        for (let flow_id of flows_id) {
+            flows.push(script[flow_id])
+        }
+        return flows
+    }
+
+
+    static flowToNodes(flow: FLOW): Array<NODE> {
+        const nodes_id = Object.keys(flow);
+        let nodes: Array<NODE> = [];
+        for (let node_id of nodes_id) {
+            nodes.push(flow[node_id])
+        }
+        return nodes
+    }
     static generateNode(id: string, node: NODE) {
         const { name, payload, type, next_node_id } = node
         switch (node.type) {
