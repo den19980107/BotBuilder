@@ -21,4 +21,8 @@ export default class DeclarVariable extends node {
         }
     }
 
+    remove(): void {
+        nodePool.remove(this.id)
+    }
+
 }

@@ -26,4 +26,8 @@ export default class HttpResponseNode extends node {
             console.error("http response node dosent have 'res' to response data")
         }
     }
+
+    remove(): void {
+        nodePool.remove(this.id)
+    }
 }

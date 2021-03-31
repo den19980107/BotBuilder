@@ -24,6 +24,8 @@ abstract class node {
 
     abstract run(flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null): Promise<any>
 
+    abstract remove(): void
+
     protected checkIfNeedParsing(payload: any, flowShareVariable: FlowShareVariable): void {
         const payloadKeys = Object.keys(payload)
         payloadKeys.forEach(key => {

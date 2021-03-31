@@ -46,7 +46,6 @@ export default class NodeConverter {
     }
 
     static convertScript(script: SCRIPT) {
-        console.log("converting script ...")
         // get all flows
         const flows_id = Object.keys(script);
         // for each flow
@@ -85,6 +84,22 @@ export default class NodeConverter {
         }
         return nodes
     }
+
+    static removeScriptNodes(script: SCRIPT) {
+        let AllNodesId: Array<string> = []
+        const flows = NodeConverter.scriptToFlows(script)
+        for (const flow of flows) {
+            const nodeIds = Object.keys(flow);
+            AllNodesId = AllNodesId.concat(nodeIds)
+        }
+        for (const nodeId of AllNodesId) {
+            const node = nodePool.get(nodeId);
+            if (node) {
+                node.remove()
+            }
+        }
+    }
+
     static generateNode(id: string, node: NODE) {
         const { name, payload, type, next_node_id } = node
         switch (node.type) {

@@ -56,4 +56,8 @@ export default class ConditionNode extends node {
                 break;
         }
     }
+
+    remove(): void {
+        nodePool.remove(this.id)
+    }
 }

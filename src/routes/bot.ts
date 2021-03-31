@@ -2,8 +2,7 @@ import { Request, Response, NextFunction, Application } from 'express';
 import Route from "./route";
 import config from '../../config/server.json'
 import BotModel from '../models/bot.model';
-import { v4 as uuid } from 'uuid';
-import NodeConverter, { SCRIPT } from '../converter';
+import NodeConverter, { FLOW, NODE, SCRIPT } from '../converter';
 
 class BotRoute extends Route {
 
@@ -44,8 +43,16 @@ class BotRoute extends Route {
             return;
         }
         try {
-            await BotModel.findByIdAndDelete(botId)
-            res.sendStatus(200);
+            const bot = await BotModel.findById(botId);
+            if (bot) {
+                await BotModel.findByIdAndDelete(botId)
+                const script = JSON.parse(bot.script)
+                // 清除 已經建立起來的 node
+                NodeConverter.removeScriptNodes(script);
+                res.sendStatus(200);
+            } else {
+                throw new Error("no bot finded");
+            }
         } catch (err) {
             res.status(500).json({ err })
         }

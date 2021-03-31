@@ -34,5 +34,7 @@ export default class FetchData extends node {
             console.log("running fetch data node have some error", e)
         }
     }
-
+    remove(): void {
+        nodePool.remove(this.id)
+    }
 }

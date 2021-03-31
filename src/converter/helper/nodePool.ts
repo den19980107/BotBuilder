@@ -15,6 +15,13 @@ export default class nodePool {
         return nodePool.pool[key]
     }
 
+    static remove = (key: string) => {
+        console.log("remove key:", key)
+        console.log("before remove node cont = ", Object.keys(nodePool.pool).length)
+        delete nodePool.pool[key];
+        console.log("after remove node cont = ", Object.keys(nodePool.pool).length)
+    }
+
     static run = async (key: string, flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null) => {
         console.log("run key = ", key)
         const node = nodePool.get(key);
