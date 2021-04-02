@@ -1,5 +1,5 @@
 enum ConditionOpertator {
-    GREATER = "OPTIONS",
+    GREATER = "GREATER",
     LESSER = "LESSER",
     GREATER_EQUAL = "GREATER_EQUAL",
     LESSER_EQUAL = "LESSER_EQUAL",

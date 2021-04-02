@@ -115,7 +115,7 @@ export default class NodeConverter {
                 // TODO
                 break;
             case NodeType.CONDITION:
-                const condition_node = new ConditionNode(id, name, payload, type, next_node_id)
+                const condition_node = new ConditionNode(id, name, payload, type, null)
                 nodePool.set(condition_node.id, condition_node);
                 break;
             case NodeType.HTTP_RESPONSE:
