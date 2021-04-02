@@ -2,14 +2,14 @@ import FlowShareVariable from "./flowShareVariable";
 
 export default class ScriptParser {
 
-    // TODO 將 #DATA.some.thing.blabla 改為 ${DATA.some.thing.blabla}
+    // TODO 將 #FLOW_SHARE_VARIABLE.some.thing.blabla 改為 ${DATA.some.thing.blabla}
     /**
-    * 檢查使用者的字串中是否包含 "#DATA" 
+    * 檢查使用者的字串中是否包含 "#FLOW_SHARE_VARIABLE" 
     * 如果有的話需要將該字串替換成目前變數中的值
     * EX:
     * payload: {
     *       statusCode: 200,
-    *       responseData: "#DATA.fetchResult" => 要替換成 flowShareVariable 中的 "fetchResult" = flowShareVariable.get("fetchResult") 
+    *       responseData: "#FLOW_SHARE_VARIABLE.fetchResult" => 要替換成 flowShareVariable 中的 "fetchResult" = flowShareVariable.get("fetchResult") 
     * }
     */
 
@@ -17,15 +17,15 @@ export default class ScriptParser {
         if (!input) return <T><any>null
 
         let string = String(input)
-        const KEY_WORD = "#DATA."
+        const KEY_WORD = "#FLOW_SHARE_VARIABLE."
         const includeKeyWord = string.includes(KEY_WORD);
         if (!includeKeyWord) return <T><any>string;
 
-        // 清掉 #DATA.
+        // 清掉 #FLOW_SHARE_VARIABLE.
         string = string.replace(KEY_WORD, "");
 
         // 取出所有層,每一層我取名叫做 "stack"
-        // ex #DATA.some.thing[0].blabla => ["some","thing[0]","blabla"]
+        // ex #FLOW_SHARE_VARIABLE.some.thing[0].blabla => ["some","thing[0]","blabla"]
         const stacks = string.split(".");
 
         let returnValue: any;

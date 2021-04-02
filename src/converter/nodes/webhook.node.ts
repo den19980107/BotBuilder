@@ -5,9 +5,16 @@ import nodePool from '../helper/nodePool';
 // constants
 import HttpMethods from '../constant/httpMethod.constants'
 import FlowShareVariable from '../helper/flowShareVariable';
+import { Request, Response } from 'express';
+
+interface WebHookNodePayload {
+    route: string;
+    method: string;
+    storeBodyAt: string
+}
 
 export default class WebHookNode extends node {
-    payload: { route: string; method: string; storeBodyAt: string }
+    payload: WebHookNodePayload
 
     constructor(id: string, name: string, payload: any, type: string, next_node_id: string | null) {
         super(id, name, payload, type, next_node_id);
@@ -16,36 +23,41 @@ export default class WebHookNode extends node {
 
     async run(flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null): Promise<void> {
         console.log("webhook node is check if need parseing")
-        this.checkIfNeedParsing(this.payload, flowShareVariable);
-        console.log("webhook node is running...")
 
-        switch (this.payload.method) {
+        console.log("parsing the node payload...")
+        const payload = this.parsingPayload<WebHookNodePayload>(this.payload, flowShareVariable);
+
+        const { route, method, storeBodyAt } = payload
+
+        const registeRoute = (req: Request, res: Response) => {
+            if (storeBodyAt) {
+                // save to global variable
+                console.log("req.body", req.body)
+                flowShareVariable.set(storeBodyAt, req.body);
+            }
+            if (this.next_node_id) {
+                // set http data
+                HTTP_Data = {
+                    req,
+                    res
+                }
+                // run node by id
+                nodePool.run(this.next_node_id, flowShareVariable, HTTP_Data);
+            }
+        }
+
+        switch (method) {
             case HttpMethods.GET:
-                app.get(this.payload.route, (req, res) => {
-                    if (this.payload.storeBodyAt) {
-                        // save to global variable
-                        console.log("req.body", req.body)
-                        flowShareVariable.set(this.payload.storeBodyAt, req.body);
-                    }
-                    if (this.next_node_id) {
-                        // set http data
-                        HTTP_Data = {
-                            req,
-                            res
-                        }
-                        // run node by id
-                        nodePool.run(this.next_node_id, flowShareVariable, HTTP_Data);
-                    }
-                })
+                app.get(route, registeRoute)
                 break;
             case HttpMethods.POST:
-                // TODO
+                app.post(route, registeRoute)
                 break;
             case HttpMethods.PUT:
-                // TODO
+                app.put(route, registeRoute)
                 break;
             case HttpMethods.DELETE:
-                // TODO
+                app.delete(route, registeRoute)
                 break;
         }
     }

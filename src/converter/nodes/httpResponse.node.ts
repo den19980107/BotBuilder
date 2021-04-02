@@ -1,6 +1,12 @@
 import nodePool from "../helper/nodePool";
 import node, { HTTP_Data } from "./INode";
 import FlowShareVariable from "../helper/flowShareVariable";
+
+interface HttpResponseNodePayload {
+    statusCode: number,
+    responseData: any
+}
+
 export default class HttpResponseNode extends node {
     // statusCode: 200,
     // responseData: null
@@ -13,12 +19,15 @@ export default class HttpResponseNode extends node {
 
     async run(flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null): Promise<void> {
         console.log("http response node is check if need parseing")
-        this.checkIfNeedParsing(this.payload, flowShareVariable);
-        console.log("http response node is running...")
+
+        console.log("parsing the node payload...")
+        const payload = this.parsingPayload<HttpResponseNodePayload>(this.payload, flowShareVariable);
+
+        const { statusCode, responseData } = payload
 
         if (HTTP_Data) {
             const { res } = HTTP_Data
-            res.status(this.payload.statusCode).json(this.payload.responseData);
+            res.status(statusCode).json(responseData);
             if (this.next_node_id) {
                 nodePool.run(this.next_node_id, flowShareVariable, HTTP_Data);
             }
