@@ -10,6 +10,7 @@ import BotModel from '../models/bot.model';
 // constants
 import NodeType from './constant/nodeType.constants'
 import FlowShareVariable from './helper/flowShareVariable'
+import { reactFlowNodesToBotBuilderFlow } from './helper/nodeToScriptConvertor'
 
 export interface SCRIPT {
     [key: string]: FLOW
@@ -39,9 +40,10 @@ export default class NodeConverter {
     static async getAllScript(): Promise<SCRIPT[]> {
         const bots = await BotModel.find({})
         const scripts: Array<SCRIPT> = [];
-        await bots.forEach(bot => {
-            scripts.push(JSON.parse(bot.script))
-        })
+        for (let bot of bots) {
+            const script = reactFlowNodesToBotBuilderFlow(JSON.parse(bot.nodes))
+            scripts.push(script);
+        }
         return scripts
     }
 
