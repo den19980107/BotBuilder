@@ -5,7 +5,7 @@ import cors from 'cors';
 // Routes
 import BotRoute from './routes/bot';
 import AuthRoute from './routes/auth';
-
+import UserRoute from './routes/user';
 // Node Converter
 import NodeConverter from './converter';
 
@@ -21,8 +21,8 @@ try {
 }
 // register routes
 new AuthRoute(app);
-new BotRoute(app)
-
+new BotRoute(app);
+new UserRoute(app);
 
 // NodeConverter start
 NodeConverter.start();

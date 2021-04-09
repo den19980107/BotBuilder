@@ -24,11 +24,28 @@ abstract class node {
 
     abstract run(flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null): Promise<any>
 
-    protected checkIfNeedParsing(payload: any, flowShareVariable: FlowShareVariable): void {
-        const payloadKeys = Object.keys(payload)
-        payloadKeys.forEach(key => {
-            this.payload[key] = ScriptParser.scriptParserMiddleware(this.payload[key], flowShareVariable)
-        })
+    abstract remove(): void
+
+    /**
+     * 用來查看每個節點的資料是否有需要轉換的
+     * 我們提供使用者在前端可以透過 "DATA.[somthing]" 來取得同一個 flow 中儲存的變數
+     * 當需要使用這些變數的時候需要到 flowShareVariable 中取得目前該變數的值
+     * 所以提供這個 parsingPayload 的方法，每個節點在要拿取資料之前都應該先使用這個 function
+     * 檢查一下裡面有沒有需要轉換的變數
+     * @param payload 每個節點的資料
+     * @param flowShareVariable flow 中共想的變數儲存的位址
+     * @returns 
+     */
+    protected parsingPayload<T>(payload: any, flowShareVariable: FlowShareVariable): T {
+        // 這邊需要將物件做 "深拷貝" 不然一樣會改掉節點內部的 payload
+        const copyPayload = JSON.parse(JSON.stringify(payload));
+
+        const payloadKeys = Object.keys(copyPayload)
+
+        for (const key of payloadKeys) {
+            copyPayload[key] = ScriptParser.scriptParserMiddleware(copyPayload[key], flowShareVariable)
+        }
+        return copyPayload;
     }
 }
 

@@ -2,9 +2,18 @@ import node, { HTTP_Data } from "./INode";
 import fetch from 'node-fetch';
 import nodePool from "../helper/nodePool";
 import FlowShareVariable from "../helper/flowShareVariable";
-export default class FetchData extends node {
 
-    payload: { url: string, method: string, body: any, headers: { [keys: string]: string }, storeDataAt: string }
+interface FetchDataNodePayload {
+    url: string,
+    method: string,
+    body: any,
+    headers: { [keys: string]: string },
+    storeDataAt: string
+}
+
+export default class FetchDataNode extends node {
+
+    payload: FetchDataNodePayload
 
     constructor(id: string, name: string, payload: any, type: string, next_node_id: string | null) {
         super(id, name, payload, type, next_node_id);
@@ -13,9 +22,11 @@ export default class FetchData extends node {
 
     async run(flowShareVariable: FlowShareVariable, HTTP_Data: HTTP_Data | null): Promise<void> {
         console.log("fetch data node is check if need parseing")
-        this.checkIfNeedParsing(this.payload, flowShareVariable);
-        console.log("fetch data node is running...")
-        const { url, method, body, headers, storeDataAt } = this.payload
+
+        console.log("parsing the node payload...")
+        const payload = this.parsingPayload<FetchDataNodePayload>(this.payload, flowShareVariable);
+
+        const { url, method, body, headers, storeDataAt } = payload
         try {
             const res = await fetch(url, {
                 method,
@@ -34,5 +45,7 @@ export default class FetchData extends node {
             console.log("running fetch data node have some error", e)
         }
     }
-
+    remove(): void {
+        nodePool.remove(this.id)
+    }
 }
