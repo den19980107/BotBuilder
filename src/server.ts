@@ -8,9 +8,11 @@ import AuthRoute from './routes/auth';
 import UserRoute from './routes/user';
 // Node Converter
 import NodeConverter from './converter';
+import DatabaseRoute from './routes/database';
 
 const app = express();
-app.use(express.json());
+// 設定 request body 最大為 1MB
+app.use(express.json({ limit: 1024 * 2014 }));
 app.use(cors());
 
 const dbConnectionString = `mongodb://${DBConfig.HOST}:${DBConfig.PORT}/${DBConfig.DBNAME}`
@@ -23,6 +25,7 @@ try {
 new AuthRoute(app);
 new BotRoute(app);
 new UserRoute(app);
+new DatabaseRoute(app)
 
 // NodeConverter start
 NodeConverter.start();

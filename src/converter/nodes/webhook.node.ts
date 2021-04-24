@@ -8,6 +8,7 @@ import FlowShareVariable from '../helper/flowShareVariable';
 import { Request, Response } from 'express';
 
 interface WebHookNodePayload {
+    userId: string;
     route: string;
     method: string;
     storeBodyAt: string
@@ -27,7 +28,7 @@ export default class WebHookNode extends node {
         console.log("parsing the node payload...")
         const payload = this.parsingPayload<WebHookNodePayload>(this.payload, flowShareVariable);
 
-        const { route, method, storeBodyAt } = payload
+        const { userId, route, method, storeBodyAt } = payload
 
         const registeRoute = (req: Request, res: Response) => {
             if (storeBodyAt) {
@@ -48,16 +49,16 @@ export default class WebHookNode extends node {
 
         switch (method) {
             case HttpMethods.GET:
-                app.get(route, registeRoute)
+                app.get(`/${userId}/${route}`, registeRoute)
                 break;
             case HttpMethods.POST:
-                app.post(route, registeRoute)
+                app.post(`/${userId}/${route}`, registeRoute)
                 break;
             case HttpMethods.PUT:
-                app.put(route, registeRoute)
+                app.put(`/${userId}/${route}`, registeRoute)
                 break;
             case HttpMethods.DELETE:
-                app.delete(route, registeRoute)
+                app.delete(`/${userId}/${route}`, registeRoute)
                 break;
         }
     }
