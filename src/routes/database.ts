@@ -28,9 +28,13 @@ class DatabaseRoute extends Route {
     }
 
     private async getTablesByUserId(req: Request, res: Response) {
-        const userId = req.user.id;
-        const tables = await TableModel.find({ belongUserId: userId });
-        res.json(tables)
+        try {
+            const userId = req.user.id;
+            const tables = await DatabaseService.getTablesByUserId(userId)
+            res.json(tables)
+        } catch (err) {
+            res.status(500).json({ err })
+        }
     }
 
     private async createTable(req: Request, res: Response) {
@@ -41,16 +45,13 @@ class DatabaseRoute extends Route {
             return
         }
         try {
-            const newTable = await TableModel.create({
+            await DatabaseService.createTable({
                 name,
                 belongUserId: userId
             })
-
-            await newTable.save();
             res.sendStatus(200);
         } catch (err) {
-            console.error(err);
-            res.status(500);
+            res.status(500).json({ err });
         }
     }
 
@@ -70,7 +71,6 @@ class DatabaseRoute extends Route {
             await TableModel.findByIdAndUpdate(tableId, { name });
             res.sendStatus(200);
         } catch (err) {
-            console.error(err)
             res.status(500).json({ err });
         }
     }
@@ -89,9 +89,13 @@ class DatabaseRoute extends Route {
     }
 
     private async getColumnsByTableId(req: Request, res: Response) {
-        const { tableId } = req.params
-        const columns = await ColumnModel.find({ belongTableId: tableId });
-        res.json(columns)
+        try {
+            const { tableId } = req.params
+            const columns = await DatabaseService.getColumnsByTableId(tableId);
+            res.json(columns)
+        } catch (err) {
+            res.status(500).json({ err })
+        }
     }
 
     private async createColumn(req: Request, res: Response) {
@@ -102,14 +106,14 @@ class DatabaseRoute extends Route {
             return
         }
         try {
-            const newColumn = await ColumnModel.create({
+            await DatabaseService.createColumn({
                 belongTableId: tableId,
                 name,
                 displayName,
                 require,
                 dataType
             })
-            await newColumn.save();
+
             res.sendStatus(200);
         } catch (err) {
             console.error(err);
@@ -130,10 +134,9 @@ class DatabaseRoute extends Route {
             return;
         }
         try {
-            await ColumnModel.findByIdAndUpdate(tableId, { id });
+            await DatabaseService.updateColumn(id, { name, displayName, require, dataType, belongTableId: tableId })
             res.sendStatus(200);
         } catch (err) {
-            console.error(err)
             res.status(500).json({ err });
         }
     }
@@ -155,18 +158,7 @@ class DatabaseRoute extends Route {
     private async getTableData(req: Request, res: Response) {
         try {
             const { tableId } = req.params;
-            const cols = await ColumnModel.find({ belongTableId: tableId })
-            const rows = await RowModel.find({ belongTableId: tableId });
-            const data = [];
-            for (const row of rows) {
-                const rowData: { [key: string]: any } = {}
-                for (const col of cols) {
-                    const value = await ValueModel.findOne({ belongColumnId: col.id, belongRowId: row.id });
-                    rowData[col.name] = value?.data
-                }
-                rowData["rowId"] = row.id
-                data.push(rowData)
-            }
+            const data = await DatabaseService.getValuesByTableId(tableId)
             res.status(200).json(data);
         } catch (err) {
             res.status(500).json({ err })
@@ -177,22 +169,7 @@ class DatabaseRoute extends Route {
         try {
             const { tableId } = req.params;
             const { data } = req.body;
-            const cols = await ColumnModel.find({ belongTableId: tableId });
-            const newRow = await RowModel.create({
-                belongTableId: tableId
-            })
-            await newRow.save();
-
-            //for each col
-            for (const col of cols) {
-                const newValue = await ValueModel.create({
-                    belongRowId: newRow.id,
-                    belongColumnId: col.id,
-                    data: data[col.name]
-                })
-                await newValue.save();
-            }
-
+            await DatabaseService.createNewRowOfValuesInTableByTableId(tableId, data)
             res.sendStatus(200);
         }
         catch (err) {
@@ -204,10 +181,7 @@ class DatabaseRoute extends Route {
         try {
             const { tableId } = req.params;
             const { rowId, value } = req.body;
-            const cols = await ColumnModel.find({ belongTableId: tableId });
-            for (const col of cols) {
-                await ValueModel.updateOne({ belongRowId: rowId, belongColumnId: col.id }, { data: value[col.name] })
-            }
+            await DatabaseService.updateRowOfValuesInTableByTableIdAndRowId(tableId, rowId, value)
             res.sendStatus(200);
         } catch (err) {
             res.status(500).json({ err })

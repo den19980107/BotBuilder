@@ -1,5 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+export interface InsertOrUpdateTableDto {
+    name: string,
+    belongUserId: string
+}
+
 export interface ITable extends Document {
     name: string,
     belongUserId: string,

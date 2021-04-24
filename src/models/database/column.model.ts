@@ -7,6 +7,14 @@ export enum ColumnDataType {
     null = "null"
 }
 
+export interface InsertOrUpdateColumnDto {
+    name: string,
+    displayName: string,
+    dataType: ColumnDataType,
+    require: boolean,
+    belongTableId: string
+}
+
 export interface IColumn extends Document {
     name: string,
     displayName: string,

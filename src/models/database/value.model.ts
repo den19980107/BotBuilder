@@ -1,5 +1,12 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+export interface InsertOrUpdateValueDto {
+    data: any,
+    belongRowId: string,
+    belongColumnId: string
+}
+
+
 export interface IValue extends Document {
     data: any,
     belongRowId: string,

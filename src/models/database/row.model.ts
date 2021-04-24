@@ -1,5 +1,9 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+export interface InsertOrUpdateRowDto {
+    belongTableId: string
+}
+
 export interface IRow extends Document {
     belongTableId: string,
 }
