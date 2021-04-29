@@ -2,11 +2,7 @@ import { DatabaseService } from "../../../service/databaseService";
 import flowShareVariable from "../../helper/flowShareVariable";
 import nodePool from "../../helper/nodePool";
 import node, { HTTP_Data } from "../INode";
-
-interface InsertRowNodePayload {
-    tableId: string,
-    data: { [key: string]: any }
-}
+import { InsertRowNodePayload } from 'botbuilder-share';
 
 export default class InsertRowNode extends node {
 

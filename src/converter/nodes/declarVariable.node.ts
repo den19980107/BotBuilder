@@ -1,11 +1,7 @@
 import FlowShareVariable from "../helper/flowShareVariable";
 import nodePool from "../helper/nodePool";
 import node, { HTTP_Data } from "./INode";
-
-interface DeclarVariableNodePayload {
-    key: string,
-    value: any
-}
+import { DeclarVariableNodePayload } from 'botbuilder-share';
 
 export default class DeclarNodeVariable extends node {
     payload: { key: string, value: any }

@@ -2,18 +2,10 @@ import nodePool from "../helper/nodePool";
 import node, { HTTP_Data } from "./INode";
 
 import FlowShareVariable from "../helper/flowShareVariable";
+import { ConditionNodePayload } from 'botbuilder-share';
 
-// constants
 import { Constants } from 'botbuilder-share';
 const { ConditionOperator } = Constants;
-
-interface ConditionNodePayload {
-    condition: any,
-    operator: string,
-    operant: any,
-    true_run_node_id: string,
-    false_run_node_id: string
-}
 
 export default class ConditionNode extends node {
 

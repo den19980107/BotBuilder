@@ -4,16 +4,9 @@ import nodePool from '../helper/nodePool';
 
 import FlowShareVariable from '../helper/flowShareVariable';
 import { Request, Response } from 'express';
-
+import { WebHookNodePayload } from 'botbuilder-share';
 import { Constants } from 'botbuilder-share'
 const { HttpMethods } = Constants
-
-interface WebHookNodePayload {
-    userId: string;
-    route: string;
-    method: string;
-    storeBodyAt: string
-}
 
 export default class WebHookNode extends node {
     payload: WebHookNodePayload

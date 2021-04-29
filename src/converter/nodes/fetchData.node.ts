@@ -2,14 +2,7 @@ import node, { HTTP_Data } from "./INode";
 import fetch from 'node-fetch';
 import nodePool from "../helper/nodePool";
 import FlowShareVariable from "../helper/flowShareVariable";
-
-interface FetchDataNodePayload {
-    url: string,
-    method: string,
-    body: any,
-    headers: { [keys: string]: string },
-    storeDataAt: string
-}
+import { FetchDataNodePayload } from 'botbuilder-share';
 
 export default class FetchDataNode extends node {
 

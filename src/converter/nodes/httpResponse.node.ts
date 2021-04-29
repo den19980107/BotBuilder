@@ -1,12 +1,7 @@
 import nodePool from "../helper/nodePool";
 import node, { HTTP_Data } from "./INode";
 import FlowShareVariable from "../helper/flowShareVariable";
-
-interface HttpResponseNodePayload {
-    statusCode: number,
-    responseData: any
-}
-
+import { HttpResponseNodePayload } from 'botbuilder-share';
 export default class HttpResponseNode extends node {
     // statusCode: 200,
     // responseData: null
