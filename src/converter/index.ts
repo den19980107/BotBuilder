@@ -4,6 +4,7 @@ import HttpResponseNode from './nodes/httpResponse.node'
 import WebHookNode from './nodes/webhook.node'
 import FetchDataNode from './nodes/fetchData.node'
 import DeclarVariableNode from './nodes/declarVariable.node'
+import InsertRowNode from './nodes/database/insertRow.node'
 // models
 import BotModel from '../models/bot.model';
 
@@ -133,6 +134,10 @@ export default class NodeConverter {
             case NodeType.DECLAR_VARIABLE:
                 const declarVariable_node = new DeclarVariableNode(id, name, payload, type, next_node_id)
                 nodePool.set(declarVariable_node.id, declarVariable_node);
+                break;
+            case NodeType.INSERT_ROW:
+                const insertRow_node = new InsertRowNode(id, name, payload, type, next_node_id)
+                nodePool.set(insertRow_node.id, insertRow_node);
                 break;
             case NodeType.LOOP:
                 // TODO
