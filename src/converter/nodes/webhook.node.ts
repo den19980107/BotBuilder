@@ -2,10 +2,11 @@ import node, { HTTP_Data } from './INode';
 import { app } from '../../server';
 import nodePool from '../helper/nodePool';
 
-// constants
-import HttpMethods from '../constant/httpMethod.constants'
 import FlowShareVariable from '../helper/flowShareVariable';
 import { Request, Response } from 'express';
+
+import { Constants } from 'botbuilder-share'
+const { HttpMethods } = Constants
 
 interface WebHookNodePayload {
     userId: string;

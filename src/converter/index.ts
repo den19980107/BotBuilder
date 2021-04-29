@@ -7,10 +7,12 @@ import DeclarVariableNode from './nodes/declarVariable.node'
 // models
 import BotModel from '../models/bot.model';
 
-// constants
-import NodeType from './constant/nodeType.constants'
 import FlowShareVariable from './helper/flowShareVariable'
 import { reactFlowNodesToBotBuilderFlow } from './helper/nodeToScriptConvertor'
+
+// constants
+import { Constants } from 'botbuilder-share'
+const { NodeType } = Constants
 
 export interface SCRIPT {
     [key: string]: FLOW

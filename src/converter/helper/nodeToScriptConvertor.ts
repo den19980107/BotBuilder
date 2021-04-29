@@ -1,7 +1,10 @@
 import { Edge, Elements, Node } from "react-flow-renderer";
 import { v4 as uuidv4 } from 'uuid'
 import { FLOW, NODE, SCRIPT } from "..";
-import NodeType from "../constant/nodeType.constants";
+
+// constants
+import { Constants } from 'botbuilder-share'
+const { NodeType } = Constants
 
 export const reactFlowNodesToBotBuilderFlow = (elements: Elements<any>): SCRIPT => {
     const script: SCRIPT = {};

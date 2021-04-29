@@ -1,9 +1,11 @@
 import nodePool from "../helper/nodePool";
 import node, { HTTP_Data } from "./INode";
 
-// constants
-import ConditionOperator from '../constant/conditionOperator.constants'
 import FlowShareVariable from "../helper/flowShareVariable";
+
+// constants
+import { Constants } from 'botbuilder-share';
+const { ConditionOperator } = Constants;
 
 interface ConditionNodePayload {
     condition: any,
