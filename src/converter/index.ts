@@ -5,6 +5,8 @@ import WebHookNode from './nodes/webhook.node'
 import FetchDataNode from './nodes/fetchData.node'
 import DeclarVariableNode from './nodes/declarVariable.node'
 import InsertRowNode from './nodes/database/insertRow.node'
+import ScheduleNode from './nodes/schedule.node'
+
 // models
 import BotModel from '../models/bot.model';
 
@@ -107,17 +109,19 @@ export default class NodeConverter {
 
     static generateNode(id: string, node: NODE) {
         const { name, payload, type, next_node_id } = node
+        const flowShareVariable = new FlowShareVariable()
         switch (node.type) {
             case NodeType.WEB_HOOK:
                 const webhook_node = new WebHookNode(id, name, payload, type, next_node_id);
                 nodePool.set(webhook_node.id, webhook_node);
                 // 事件類型的節點在建立後就要馬上 RUN
-                // 建立 flow 共享變數
-                const flowShareVariable = new FlowShareVariable()
                 nodePool.run(id, flowShareVariable, null);
                 break;
-            case NodeType.TIMER:
-                // TODO
+            case NodeType.SCHEDULE:
+                const schedule_node = new ScheduleNode(id, name, payload, type, next_node_id);
+                nodePool.set(schedule_node.id, schedule_node);
+                // 事件類型的節點在建立後就要馬上 RUN
+                nodePool.run(id, flowShareVariable, null);
                 break;
             case NodeType.CONDITION:
                 const condition_node = new ConditionNode(id, name, payload, type, null)

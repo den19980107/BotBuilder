@@ -25,7 +25,7 @@ export const reactFlowNodesToBotBuilderFlow = (elements: Elements<any>): SCRIPT 
                 next_node_id: null
             }
             nodePool[el.id] = node;
-            if (el.type === "input") {
+            if (el.type === "event") {
                 inputIds.push(el.id)
             }
         }

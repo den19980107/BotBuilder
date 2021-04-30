@@ -16,6 +16,7 @@ class DatabaseService {
     static async getTablesByUserId(userId: string) {
         try {
             const tables = await TableModel.find({ belongUserId: userId });
+            console.log(`DATABASE LOG: getTablesByUserId , userId = ${userId}`)
             return tables
         } catch (err) {
             throw err;
@@ -30,6 +31,7 @@ class DatabaseService {
         try {
             const newTable = await TableModel.create(tableData)
             await newTable.save();
+            console.log(`DATABASE LOG: createTable , tableData = ${tableData}`)
             return newTable
         } catch (err) {
             throw err
@@ -44,6 +46,7 @@ class DatabaseService {
     static async updateTableName(tableId: string, tableData: InsertOrUpdateTableDto) {
         try {
             await TableModel.findByIdAndUpdate(tableId, tableData);
+            console.log(`DATABASE LOG: updateTableName ,tableId = ${tableId}, tableData = ${tableData}`)
         } catch (err) {
             throw err;
         }
@@ -58,6 +61,7 @@ class DatabaseService {
             const table = await TableModel.findById(tableId);
             if (table) {
                 await TableModel.findByIdAndDelete(tableId);
+                console.log(`DATABASE LOG: deleteTableByTableId ,tableId = ${tableId}`)
             } else {
                 throw new Error("no table finded");
             }
@@ -91,6 +95,7 @@ class DatabaseService {
     static async getColumnsByTableId(tableId: string) {
         try {
             const columns = await ColumnModel.find({ belongTableId: tableId });
+            console.log(`DATABASE LOG: getColumnsByTableId ,tableId = ${tableId}`)
             return columns
         } catch (err) {
             throw err
@@ -105,6 +110,7 @@ class DatabaseService {
         try {
             const newColumn = await ColumnModel.create(columnData)
             await newColumn.save();
+            console.log(`DATABASE LOG: createColumn ,columnData = ${columnData}`)
             return newColumn;
         } catch (err) {
             throw err
@@ -119,6 +125,7 @@ class DatabaseService {
     static async updateColumn(columnId: string, columnData: InsertOrUpdateColumnDto) {
         try {
             await ColumnModel.findByIdAndUpdate(columnId, columnData);
+            console.log(`DATABASE LOG: updateColumn ,columnId = ${columnId},columnData = ${columnData}`)
         } catch (err) {
             throw err;
         }
@@ -132,6 +139,7 @@ class DatabaseService {
         try {
             await this.deleteColumnByColumnId(columnId);
             await this.deleteTableValue(columnId, null);
+            console.log(`DATABASE LOG: deleteColumnAndValueByColumnId ,columnId = ${columnId}`)
         } catch (err) {
             throw err;
         }
@@ -146,6 +154,7 @@ class DatabaseService {
             const col = await ColumnModel.findById(columnId);
             if (col) {
                 await ColumnModel.findByIdAndDelete(columnId);
+                console.log(`DATABASE LOG: deleteColumnByColumnId ,columnId = ${columnId}`)
             } else {
                 throw new Error("no column finded");
             }
@@ -165,6 +174,7 @@ class DatabaseService {
     static async getRowsByTableId(tableId: string) {
         try {
             const rows = await RowModel.find({ belongTableId: tableId });
+            console.log(`DATABASE LOG: getRowsByTableId ,tableId = ${tableId}`)
             return rows;
         } catch (err) {
             throw err
@@ -179,6 +189,7 @@ class DatabaseService {
         try {
             const newRow = await RowModel.create(rowData);
             await newRow.save();
+            console.log(`DATABASE LOG: createRow ,rowData = ${rowData}`)
             return newRow
         } catch (err) {
             throw err;
@@ -193,6 +204,7 @@ class DatabaseService {
     static async updateRow(rowId: string, rowData: InsertOrUpdateRowDto) {
         try {
             await RowModel.findOneAndUpdate({ _id: rowId }, rowData);
+            console.log(`DATABASE LOG: updateRow ,rowId = ${rowId}, rowData = ${rowData}`)
         } catch (err) {
             throw err;
         }
@@ -205,6 +217,7 @@ class DatabaseService {
     static async deleteRowAndValueByRowId(rowId: string) {
         await this.deleteRowByRowId(rowId);
         await this.deleteTableValue(null, rowId);
+        console.log(`DATABASE LOG: deleteRowAndValueByRowId ,rowId = ${rowId}`)
     }
 
     /**
@@ -216,6 +229,7 @@ class DatabaseService {
             const col = await RowModel.findById(rowId);
             if (col) {
                 await RowModel.findByIdAndDelete(rowId);
+                console.log(`DATABASE LOG: deleteRowByRowId ,rowId = ${rowId}`)
             } else {
                 throw new Error("no row finded");
             }
@@ -236,6 +250,7 @@ class DatabaseService {
     static async getValueByRowIdAndColumnId(rowId: string, columnId: string) {
         try {
             const value = await ValueModel.findOne({ belongRowId: rowId, belongColumnId: columnId });
+            console.log(`DATABASE LOG: getValueByRowIdAndColumnId ,rowId = ${rowId},columnUd = ${columnId},value = ${value}`)
             return value;
         } catch (err) {
             throw err;
@@ -249,6 +264,7 @@ class DatabaseService {
     static async getValuesByRowId(rowId: string) {
         try {
             const values = await ValueModel.find({ belongRowId: rowId });
+            console.log(`DATABASE LOG: getValuesByRowId ,rowId = ${rowId},value = ${values}`)
             return values;
         } catch (err) {
             throw err;
@@ -293,6 +309,7 @@ class DatabaseService {
             }
             data.push(rowData)
         }
+        console.log(`DATABASE LOG: getValuesByTableId ,tableId = ${tableId},data = ${data}`)
         return data
     }
 
@@ -305,6 +322,7 @@ class DatabaseService {
         try {
             const newValue = await ValueModel.create(value);
             await newValue.save();
+            console.log(`DATABASE LOG: createValue ,value = ${value}`)
             return newValue;
         } catch (err) {
             throw err;
@@ -332,6 +350,7 @@ class DatabaseService {
                     data: data[col.name]
                 })
             }
+            console.log(`DATABASE LOG: createNewRowOfValuesInTableByTableId ,tableId = ${tableId},data = ${data}`)
         } catch (err) {
             throw err;
 
@@ -346,6 +365,7 @@ class DatabaseService {
     static async updateValue(value: InsertOrUpdateValueDto) {
         try {
             await ValueModel.updateOne({ belongRowId: value.belongRowId, belongColumnId: value.belongColumnId }, { data: value.data })
+            console.log(`DATABASE LOG: updateValue ,value = ${value}`)
         } catch (err) {
             throw err
         }
@@ -364,6 +384,7 @@ class DatabaseService {
             for (const col of cols) {
                 await ValueModel.updateOne({ belongRowId: rowId, belongColumnId: col.id }, { data: data[col.name] })
             }
+            console.log(`DATABASE LOG: updateRowOfValuesInTableByTableIdAndRowId ,tableId = ${tableId},rowId = ${rowId},data = ${data}`)
         } catch (err) {
             throw err;
         }
@@ -383,6 +404,9 @@ class DatabaseService {
             if (columnId) await ValueModel.deleteMany({ belongColumnId: columnId })
             if (rowId) await ValueModel.deleteMany({ belongRowId: rowId })
             if (columnId && rowId) await ValueModel.deleteMany({ belongColumnId: columnId, belongRowId: rowId })
+
+            console.log(`DATABASE LOG: deleteTableValue ,columnId = ${columnId},rowId = ${rowId}`)
+
         } catch (err) {
             throw err
         }
