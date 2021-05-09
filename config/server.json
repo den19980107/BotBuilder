@@ -1,4 +1,8 @@
 {
-    "jwt_key":"botbuilder",
-    "API_PREFIX_URL":"/api"
+    "jwt_key": "botbuilder",
+    "API_PREFIX_URL": "/api",
+    "SCRIPT_PARSER": {
+        "START_SPLITER": "${",
+        "END_SPLITER": "}"
+    }
 }
