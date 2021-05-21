@@ -6,6 +6,7 @@ import FetchDataNode from './nodes/fetchData.node'
 import DeclarVariableNode from './nodes/declarVariable.node'
 import InsertRowNode from './nodes/database/insertRow.node'
 import ScheduleNode from './nodes/schedule.node'
+import RedirectNode from './nodes/redirect.node';
 
 // models
 import BotModel from '../models/bot.model';
@@ -130,6 +131,10 @@ export default class NodeConverter {
             case NodeType.HTTP_RESPONSE:
                 const httpResponse_node = new HttpResponseNode(id, name, payload, type, next_node_id)
                 nodePool.set(httpResponse_node.id, httpResponse_node);
+                break;
+            case NodeType.REDIRECT:
+                const redirect_node = new RedirectNode(id, name, payload, type, next_node_id);
+                nodePool.set(redirect_node.id, redirect_node);
                 break;
             case NodeType.FETCH_DATA:
                 const fecthData_node = new FetchDataNode(id, name, payload, type, next_node_id)
