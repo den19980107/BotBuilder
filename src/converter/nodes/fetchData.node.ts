@@ -19,12 +19,14 @@ export default class FetchDataNode extends node {
         console.log("parsing the node payload...")
         const payload = this.parsingPayload<FetchDataNodePayload>(this.payload, flowShareVariable);
 
-        const { url, method, body, headers, storeDataAt } = payload
+        const { url, method, body, headers, storeDataAt, postInForm } = payload
         try {
+
             const res = await fetch(url, {
                 method,
-                body,
-                headers
+                // TODO 這邊 postInForm 應該也要是 boolean 但卻是 string，先用這樣之後要修
+                body: this.bodyDataConvertor(body, postInForm as any === 'true'),
+                headers: this.headerDataConvertor(headers),
             })
             console.log("response is ", res)
             const json = await res.json();
@@ -38,6 +40,25 @@ export default class FetchDataNode extends node {
             console.log("running fetch data node have some error", e)
         }
     }
+
+    headerDataConvertor(rawHeader: any) {
+        if (!rawHeader) return null;
+        // TODO 現在用 JSON.parse 只是應付一下而已，之後要改掉，照理說傳過來要可以直接用
+        return JSON.parse(rawHeader);
+    }
+
+    bodyDataConvertor(rawBody: any, postInFrom: boolean) {
+        if (!rawBody) return null;
+        // TODO 現在用 JSON.parse 只是應付一下而已，之後要改掉，照理說傳過來要可以直接用
+        const parseHeaders = JSON.parse(rawBody);
+        if (postInFrom) {
+            const formData = new URLSearchParams(parseHeaders);
+            return formData;
+        } else {
+            return parseHeaders;
+        }
+    }
+
     remove(): void {
         nodePool.remove(this.id)
     }
