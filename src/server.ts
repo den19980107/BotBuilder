@@ -12,6 +12,7 @@ import DatabaseRoute from './routes/database';
 
 const app = express();
 // 設定 request body 最大為 1MB
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: 1024 * 2014 }));
 app.use(cors());
 
