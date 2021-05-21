@@ -69,13 +69,23 @@ class BotRoute extends Route {
         }
         const { name, nodes } = req.body;
         if (!name || !nodes) {
-            console.log(name, nodes);
             res.status(400).json({ msg: "name or nodes is empty" });
             return;
         }
         try {
-            console.log(nodes);
+            const reactFlowNodes = JSON.parse(nodes);
+            const script = reactFlowNodesToBotBuilderFlow(reactFlowNodes);
+            // 清除舊的 node
+            NodeConverter.removeScriptNodes(script);
+
+            // 更新 node
             await BotModel.findByIdAndUpdate(botId, { name, nodes });
+
+            // 建立更新後的 node
+            const newBotScript: SCRIPT = reactFlowNodesToBotBuilderFlow(
+                JSON.parse(nodes)
+            );
+            NodeConverter.convertScript(newBotScript);
             res.sendStatus(200);
         } catch (err) {
             res.status(500).json({ err });
