@@ -9,7 +9,7 @@ import ScheduleNode from './nodes/schedule.node'
 import RedirectNode from './nodes/redirect.node';
 
 // models
-import BotModel from '../models/bot.model';
+import BotModel from '../models/script.model';
 
 import FlowShareVariable from './helper/flowShareVariable'
 import { reactFlowNodesToBotBuilderFlow } from './helper/nodeToScriptConvertor'

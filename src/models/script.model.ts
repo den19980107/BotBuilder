@@ -1,16 +1,16 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IBot extends Document {
+export interface IScript extends Document {
     belongUserId: string,
     name: string,
-    nodes:string
+    nodes: string
 }
 
-const BotSchema: Schema = new Schema({
+const ScriptSchema: Schema = new Schema({
     belongUserId: { type: String, required: true },
     name: { type: String, required: true },
-    nodes: { type: String, require:true }
+    nodes: { type: String, require: true }
 });
 
 // Export the model and return your IUser interface
-export default mongoose.model<IBot>('Bot', BotSchema);
+export default mongoose.model<IScript>('Script', ScriptSchema);

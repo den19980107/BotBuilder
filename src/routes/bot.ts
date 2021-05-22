@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, Application } from "express";
 import Route from "./route";
 import config from "../../config/server.json";
-import BotModel from "../models/bot.model";
+import BotModel from "../models/script.model";
 import NodeConverter, { FLOW, NODE, SCRIPT } from "../converter";
 import { reactFlowNodesToBotBuilderFlow } from "../converter/helper/nodeToScriptConvertor";
 
