@@ -26,7 +26,12 @@ export default class ScriptParser {
     static scriptParserMiddleware(input: any, flowShareVariable: FlowShareVariable) {
         if (!input) return null
 
-        let string = String(input)
+        let string;
+        if (typeof input === 'object') {
+            string = JSON.stringify(input)
+        } else {
+            string = String(input)
+        }
         const startSpliter = serverConfig.SCRIPT_PARSER.START_SPLITER;
         const endSpliter = serverConfig.SCRIPT_PARSER.END_SPLITER;
 

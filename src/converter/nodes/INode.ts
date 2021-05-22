@@ -44,6 +44,13 @@ abstract class node {
 
         for (const key of payloadKeys) {
             copyPayload[key] = ScriptParser.scriptParserMiddleware(copyPayload[key], flowShareVariable)
+            if (copyPayload[key]) {
+                try {
+                    copyPayload[key] = JSON.parse(copyPayload[key])
+                } catch (e) {
+                    console.log("cant not parse this payload, use original payload instead")
+                }
+            }
         }
         return copyPayload;
     }
