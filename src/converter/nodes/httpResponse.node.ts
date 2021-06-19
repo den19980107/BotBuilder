@@ -22,7 +22,11 @@ export default class HttpResponseNode extends node {
 
         if (HTTP_Data) {
             const { res } = HTTP_Data
-            res.status(statusCode).json(responseData);
+            try {
+                res.status(statusCode).json(JSON.parse(responseData));
+            } catch (e) {
+                res.status(400).send("parse response to json error,please check if your response data is valid");
+            }
             if (this.next_node_id) {
                 nodePool.run(this.next_node_id, flowShareVariable, HTTP_Data);
             }
