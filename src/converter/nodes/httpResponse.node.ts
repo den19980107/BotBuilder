@@ -25,7 +25,7 @@ export default class HttpResponseNode extends node {
             try {
                 res.status(statusCode).json(JSON.parse(responseData));
             } catch (e) {
-                res.status(400).send("parse response to json error,please check if your response data is valid");
+                res.status(statusCode).send(responseData);
             }
             if (this.next_node_id) {
                 nodePool.run(this.next_node_id, flowShareVariable, HTTP_Data);

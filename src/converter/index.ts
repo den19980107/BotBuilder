@@ -9,10 +9,10 @@ import ScheduleNode from './nodes/schedule.node'
 import RedirectNode from './nodes/redirect.node';
 
 // models
-import BotModel from '../models/script.model';
+import ScriptModel from '../models/script.model';
 
 import FlowShareVariable from './helper/flowShareVariable'
-import { reactFlowNodesToBotBuilderFlow } from './helper/nodeToScriptConvertor'
+import { reactFlowElementsToBotBuilderFlow } from './helper/nodeToScriptConvertor'
 
 // constants
 import { Constants } from 'botbuilder-share'
@@ -44,10 +44,10 @@ export default class NodeConverter {
     }
 
     static async getAllScript(): Promise<SCRIPT[]> {
-        const bots = await BotModel.find({})
+        const bots = await ScriptModel.find({})
         const scripts: Array<SCRIPT> = [];
         for (let bot of bots) {
-            const script = reactFlowNodesToBotBuilderFlow(JSON.parse(bot.nodes))
+            const script = await reactFlowElementsToBotBuilderFlow(JSON.parse(bot.nodes))
             scripts.push(script);
         }
         return scripts

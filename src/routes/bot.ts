@@ -3,7 +3,7 @@ import Route from "./route";
 import config from "../../config/server.json";
 import BotModel from "../models/script.model";
 import NodeConverter, { FLOW, NODE, SCRIPT } from "../converter";
-import { reactFlowNodesToBotBuilderFlow } from "../converter/helper/nodeToScriptConvertor";
+import { reactFlowElementsToBotBuilderFlow } from "../converter/helper/nodeToScriptConvertor";
 
 class BotRoute extends Route {
     protected registerRoutes(app: Application) {
@@ -14,7 +14,7 @@ class BotRoute extends Route {
     }
 
     private async create(req: Request, res: Response) {
-        const { name, nodes } = req.body;
+        const { name, nodes, isMoudle } = req.body;
         if (!name || !nodes) {
             res.status(400).json({ msg: "name or nodes is empty" });
             return;
@@ -24,10 +24,11 @@ class BotRoute extends Route {
                 name,
                 belongUserId: req.user.id,
                 nodes,
+                isMoudle
             });
             await newBot.save();
 
-            const newBotScript: SCRIPT = reactFlowNodesToBotBuilderFlow(
+            const newBotScript: SCRIPT = await reactFlowElementsToBotBuilderFlow(
                 JSON.parse(newBot.nodes)
             );
             NodeConverter.convertScript(newBotScript);
@@ -49,7 +50,7 @@ class BotRoute extends Route {
             if (bot) {
                 await BotModel.findByIdAndDelete(botId);
                 const nodes = JSON.parse(bot.nodes);
-                const script = reactFlowNodesToBotBuilderFlow(nodes);
+                const script = await reactFlowElementsToBotBuilderFlow(nodes);
                 // 清除 已經建立起來的 node
                 NodeConverter.removeScriptNodes(script);
                 res.sendStatus(200);
@@ -67,22 +68,22 @@ class BotRoute extends Route {
             res.status(400).json({ msg: "botId is empty" });
             return;
         }
-        const { name, nodes } = req.body;
+        const { name, nodes, isMoudle } = req.body;
         if (!name || !nodes) {
             res.status(400).json({ msg: "name or nodes is empty" });
             return;
         }
         try {
             const reactFlowNodes = JSON.parse(nodes);
-            const script = reactFlowNodesToBotBuilderFlow(reactFlowNodes);
+            const script = await reactFlowElementsToBotBuilderFlow(reactFlowNodes);
             // 清除舊的 node
             NodeConverter.removeScriptNodes(script);
 
             // 更新 node
-            await BotModel.findByIdAndUpdate(botId, { name, nodes });
+            await BotModel.findByIdAndUpdate(botId, { name, nodes, isMoudle });
 
             // 建立更新後的 node
-            const newBotScript: SCRIPT = reactFlowNodesToBotBuilderFlow(
+            const newBotScript: SCRIPT = await reactFlowElementsToBotBuilderFlow(
                 JSON.parse(nodes)
             );
             NodeConverter.convertScript(newBotScript);
