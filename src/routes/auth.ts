@@ -59,7 +59,7 @@ class AuthRoute extends Route {
                     id: user.id,
                     name: user.username
                 }
-                const accessToken = jwt.sign(userData, config.jwt_key)
+                const accessToken = jwt.sign(userData, config.jwt_key, { expiresIn: '24h' })
                 res.json({ token: accessToken });
             } else {
                 res.status(401).json({ msg: "user or password was wrong!" })
