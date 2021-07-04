@@ -18,34 +18,34 @@ import { reactFlowElementsToBotBuilderFlow } from './helper/nodeToScriptConverto
 import { Constants } from 'botbuilder-share'
 const { NodeType } = Constants
 
-export interface SCRIPT {
-    [key: string]: FLOW
+export interface BOT_BUILDER_SCRIPT {
+    [key: string]: BOT_BUILDER_FLOW
 }
 
-export interface NODE {
+export interface BOT_BUILDER_NODE {
     name: string,
     type: string,
     payload: any,
     next_node_id: string | null
 }
 
-export interface FLOW {
-    [key: string]: NODE
+export interface BOT_BUILDER_FLOW {
+    [key: string]: BOT_BUILDER_NODE
 }
 
 export default class NodeConverter {
     static async start() {
         // get all bots scripts
-        const scripts: Array<SCRIPT> = await this.getAllScript()
+        const scripts: Array<BOT_BUILDER_SCRIPT> = await this.getAllScript()
         // for each bot script
         scripts.forEach(script => {
             NodeConverter.convertScript(script)
         })
     }
 
-    static async getAllScript(): Promise<SCRIPT[]> {
+    static async getAllScript(): Promise<BOT_BUILDER_SCRIPT[]> {
         const bots = await ScriptModel.find({})
-        const scripts: Array<SCRIPT> = [];
+        const scripts: Array<BOT_BUILDER_SCRIPT> = [];
         for (let bot of bots) {
             const script = await reactFlowElementsToBotBuilderFlow(JSON.parse(bot.nodes))
             scripts.push(script);
@@ -53,7 +53,7 @@ export default class NodeConverter {
         return scripts
     }
 
-    static convertScript(script: SCRIPT) {
+    static convertScript(script: BOT_BUILDER_SCRIPT) {
         // get all flows
         const flows_id = Object.keys(script);
         // for each flow
@@ -64,7 +64,7 @@ export default class NodeConverter {
         })
     }
 
-    static convertFlow(flow: FLOW) {
+    static convertFlow(flow: BOT_BUILDER_FLOW) {
         const nodes_id = Object.keys(flow)
 
         // 把所有 node 建立起來存放在 global node 中
@@ -74,9 +74,9 @@ export default class NodeConverter {
         })
     }
 
-    static scriptToFlows(script: SCRIPT): Array<FLOW> {
+    static scriptToFlows(script: BOT_BUILDER_SCRIPT): Array<BOT_BUILDER_FLOW> {
         const flows_id = Object.keys(script);
-        let flows: Array<FLOW> = [];
+        let flows: Array<BOT_BUILDER_FLOW> = [];
         for (let flow_id of flows_id) {
             flows.push(script[flow_id])
         }
@@ -84,16 +84,16 @@ export default class NodeConverter {
     }
 
 
-    static flowToNodes(flow: FLOW): Array<NODE> {
+    static flowToNodes(flow: BOT_BUILDER_FLOW): Array<BOT_BUILDER_NODE> {
         const nodes_id = Object.keys(flow);
-        let nodes: Array<NODE> = [];
+        let nodes: Array<BOT_BUILDER_NODE> = [];
         for (let node_id of nodes_id) {
             nodes.push(flow[node_id])
         }
         return nodes
     }
 
-    static removeScriptNodes(script: SCRIPT) {
+    static removeScriptNodes(script: BOT_BUILDER_SCRIPT) {
         let AllNodesId: Array<string> = []
         const flows = NodeConverter.scriptToFlows(script)
         for (const flow of flows) {
@@ -108,7 +108,7 @@ export default class NodeConverter {
         }
     }
 
-    static generateNode(id: string, node: NODE) {
+    static generateNode(id: string, node: BOT_BUILDER_NODE) {
         const { name, payload, type, next_node_id } = node
         const flowShareVariable = new FlowShareVariable()
         switch (node.type) {

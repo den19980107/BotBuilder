@@ -1,16 +1,16 @@
 import { Edge, Elements, Node } from "react-flow-renderer";
 import { v4 as uuidv4 } from 'uuid'
-import { FLOW, NODE, SCRIPT } from "..";
+import { BOT_BUILDER_FLOW, BOT_BUILDER_NODE, BOT_BUILDER_SCRIPT } from "..";
 
 // constants
 import { Constants, ScriptMoudleNodePayload } from 'botbuilder-share'
 import ScriptModel from "../../models/script.model";
 const { NodeType } = Constants
 
-export const reactFlowElementsToBotBuilderFlow = async (elements: Elements<any>): Promise<SCRIPT> => {
-    const script: SCRIPT = {};
+export const reactFlowElementsToBotBuilderFlow = async (elements: Elements<any>): Promise<BOT_BUILDER_SCRIPT> => {
+    const script: BOT_BUILDER_SCRIPT = {};
     const inputIds: string[] = []
-    const nodePool: { [key: string]: NODE } = {}
+    const nodePool: { [key: string]: BOT_BUILDER_NODE } = {}
 
     elements = await mergeMoudleScriptElement(elements);
 
@@ -22,7 +22,7 @@ export const reactFlowElementsToBotBuilderFlow = async (elements: Elements<any>)
 
 
         if (nodeElement.id.includes("node_")) {
-            const node: NODE = {
+            const node: BOT_BUILDER_NODE = {
                 name: el.data.label,
                 type: el.data.type,
                 payload: el.data.payload,
@@ -47,7 +47,7 @@ export const reactFlowElementsToBotBuilderFlow = async (elements: Elements<any>)
     }
 
     for (let i = 0; i < inputIds.length; i++) {
-        const flow: FLOW = {}
+        const flow: BOT_BUILDER_FLOW = {}
         let firstNodeId: string | null = inputIds[i]
 
 

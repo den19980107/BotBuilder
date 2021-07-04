@@ -3,7 +3,7 @@ import DBConfig from '../config/db.json';
 import connectToDB from './connectToDB';
 import cors from 'cors';
 // Routes
-import BotRoute from './routes/bot';
+import ScriptRoute from './routes/script';
 import AuthRoute from './routes/auth';
 import UserRoute from './routes/user';
 // Node Converter
@@ -24,7 +24,7 @@ try {
 }
 // register routes
 new AuthRoute(app);
-new BotRoute(app);
+new ScriptRoute(app);
 new UserRoute(app);
 new DatabaseRoute(app)
 
