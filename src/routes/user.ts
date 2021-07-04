@@ -10,7 +10,7 @@ class UserRoute extends Route {
 
     private async getScriptsByUserId(req: Request, res: Response) {
         const userId = req.user.id;
-        const { onlyScriptMoudle } = req.params;
+        const { onlyScriptMoudle } = req.query;
 
         const filter: any = {
             belongUserId: userId
